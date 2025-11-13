@@ -48,6 +48,8 @@ const AppRoutes = () => (
             <Header />
             <main className="flex-1">
               <Routes>
+                    {/* --- Default landing page is /signup --- */}
+    <Route path="/" element={<Navigate to="/signup" replace />} />
                 {/* Default Dashboard route */}
                 <Route index element={<Dashboard />} />
                 <Route path="courses" element={<Courses />} />
