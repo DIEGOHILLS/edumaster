@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 
 export default function SignupPage() {
-  const { register } = useContext(AuthContext);
+  const { register, login } = useContext(AuthContext);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -13,9 +13,14 @@ export default function SignupPage() {
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
+      // Register user
       await register(name, email, password);
-      alert("Signup successful!");
-      navigate("/login");
+
+      // Auto-login after signup
+      await login(email, password);
+
+      // Redirect to dashboard
+      navigate("/");
     } catch (err: any) {
       setError(err.response?.data?.message || "Signup failed");
     }
@@ -25,7 +30,9 @@ export default function SignupPage() {
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <form onSubmit={handleSignup} className="bg-white shadow-md rounded-lg p-8 w-96">
         <h2 className="text-2xl font-bold mb-6 text-center">Sign Up</h2>
+
         {error && <p className="text-red-500 mb-3">{error}</p>}
+
         <input
           type="text"
           placeholder="Name"
