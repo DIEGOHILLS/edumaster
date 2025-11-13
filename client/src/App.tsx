@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { AuthProvider, AuthContext } from "./context/AuthContext";
 import { useContext } from "react";
+import { AuthProvider, AuthContext } from "./context/AuthContext";
 
 import SignupPage from "./pages/SignupPage";
 import LoginPage from "./pages/LoginPage";
@@ -36,17 +36,10 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 }
 
 function AppRoutes() {
-  const { user } = useContext(AuthContext);
-
   return (
     <Routes>
-      {/* Default landing page */}
-      <Route
-        path="/"
-        element={
-          user ? <Navigate to="/dashboard" replace /> : <Navigate to="/signup" replace />
-        }
-      />
+      {/* Landing page */}
+      <Route path="/" element={<Navigate to="/signup" replace />} />
 
       {/* Public routes */}
       <Route path="/signup" element={<SignupPage />} />
