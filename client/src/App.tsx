@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate, Link } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useContext } from "react";
 import { AuthProvider, AuthContext } from "./context/AuthContext";
 
@@ -20,7 +20,7 @@ import ABTesting from "./pages/ABTesting";
 import PeerReview from "./pages/PeerReview";
 import NotFound from "./pages/NotFound";
 
-// Layout & UI
+// Layout
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/layout/AppSidebar";
 import { Header } from "@/components/layout/Header";
@@ -31,14 +31,14 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 
 const queryClient = new QueryClient();
 
-// ProtectedRoute
+// ProtectedRoute wrapper
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user } = useContext(AuthContext);
   if (!user) return <Navigate to="/signup" replace />;
   return <>{children}</>;
 }
 
-// Sidebar with proper links
+// Layout for all protected pages
 function Layout() {
   return (
     <SidebarProvider>
@@ -73,20 +73,23 @@ function Layout() {
   );
 }
 
-// App Routes
+// App routes
 function AppRoutes() {
   const { user } = useContext(AuthContext);
 
   return (
     <Routes>
-      {/* Default landing page */}
-      <Route path="/" element={<Navigate to="/signup" replace />} />
+      {/* Landing page */}
+      <Route
+        path="/"
+        element={user ? <Navigate to="/dashboard" replace /> : <Navigate to="/signup" replace />}
+      />
 
       {/* Public */}
       <Route path="/signup" element={user ? <Navigate to="/dashboard" replace /> : <SignupPage />} />
       <Route path="/login" element={user ? <Navigate to="/dashboard" replace /> : <LoginPage />} />
 
-      {/* Protected layout */}
+      {/* Protected */}
       <Route path="/*" element={<ProtectedRoute><Layout /></ProtectedRoute>} />
 
       {/* Catch-all */}
