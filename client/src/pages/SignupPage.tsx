@@ -1,20 +1,15 @@
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 
 export default function SignupPage() {
-  const { register, user } = useContext(AuthContext);
+  const { register } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-
-  // Redirect if already logged in
-  useEffect(() => {
-    if (user) navigate("/dashboard", { replace: true });
-  }, [user]);
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,7 +22,7 @@ export default function SignupPage() {
 
     try {
       await register(name, email, password);
-      navigate("/dashboard"); // Redirect after signup
+      navigate("/dashboard"); // redirect after signup/login
     } catch (err: any) {
       setError(err.message || "Signup failed");
     }
@@ -67,16 +62,6 @@ export default function SignupPage() {
         >
           Sign Up
         </button>
-
-        <p className="mt-3 text-sm text-center">
-          Already have an account?{" "}
-          <span
-            onClick={() => navigate("/login")}
-            className="text-blue-500 cursor-pointer"
-          >
-            Login
-          </span>
-        </p>
       </form>
     </div>
   );

@@ -38,14 +38,14 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 function AppRoutes() {
   return (
     <Routes>
-      {/* Landing page */}
+      {/* Default landing page is /signup */}
       <Route path="/" element={<Navigate to="/signup" replace />} />
 
-      {/* Public routes */}
+      {/* Public */}
       <Route path="/signup" element={<SignupPage />} />
       <Route path="/login" element={<LoginPage />} />
 
-      {/* Protected routes */}
+      {/* Protected */}
       <Route
         path="/*"
         element={

@@ -17,15 +17,14 @@ export const AuthContext = createContext<AuthContextType>({
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<any>(null);
-  const [loading, setLoading] = useState(true); // ✅ Track initial auth loading
 
+  // Load user from localStorage but don't auto-redirect
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     const token = localStorage.getItem("token");
     if (storedUser && token) {
       setUser(JSON.parse(storedUser));
     }
-    setLoading(false);
   }, []);
 
   const login = async (email: string, password: string) => {
@@ -46,7 +45,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         "https://edumaster-3sjq.onrender.com/api/auth/register",
         { name, email, password }
       );
-      // Auto-login
+      // Auto-login after signup
       await login(email, password);
     } catch (err: any) {
       if (err.response?.data?.message === "Email already exists") {
@@ -65,7 +64,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <AuthContext.Provider value={{ user, login, register, logout }}>
-      {!loading && children}
+      {children}
     </AuthContext.Provider>
   );
 };
