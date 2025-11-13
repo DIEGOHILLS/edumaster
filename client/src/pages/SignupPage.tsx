@@ -11,19 +11,27 @@ export default function SignupPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  // Redirect if already logged in
   useEffect(() => {
     if (user) navigate("/");
   }, [user]);
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
+
+    if (!name || !email || !password) {
+      setError("All fields are required");
+      return;
+    }
+
     try {
-      await register(name, email, password); // register backend
-      await login(email, password); // auto login
-      navigate("/"); // redirect to dashboard
+      // Register user
+      await register(name, email, password);
+      // Auto-login after successful signup
+      await login(email, password);
+      navigate("/"); // dashboard
     } catch (err: any) {
-      setError(err.response?.data?.message || "Signup failed");
+      setError(err.message || "Signup failed");
     }
   };
 
@@ -40,7 +48,6 @@ export default function SignupPage() {
           value={name}
           onChange={(e) => setName(e.target.value)}
           className="border p-2 w-full mb-3 rounded"
-          required
         />
         <input
           type="email"
@@ -48,7 +55,6 @@ export default function SignupPage() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           className="border p-2 w-full mb-3 rounded"
-          required
         />
         <input
           type="password"
@@ -56,7 +62,6 @@ export default function SignupPage() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           className="border p-2 w-full mb-4 rounded"
-          required
         />
         <button
           type="submit"

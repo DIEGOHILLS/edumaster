@@ -34,10 +34,22 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const register = async (name: string, email: string, password: string) => {
-    await axios.post(
-      "https://edumaster-3sjq.onrender.com/api/auth/register",
-      { name, email, password }
-    );
+    if (!name || !email || !password) {
+      throw new Error("All fields are required");
+    }
+
+    try {
+      await axios.post(
+        "https://edumaster-3sjq.onrender.com/api/auth/register",
+        { name, email, password }
+      );
+    } catch (err: any) {
+      if (err.response?.data?.message === "Email already exists") {
+        throw new Error("This email is already registered. Try logging in.");
+      } else {
+        throw new Error(err.response?.data?.message || "Signup failed");
+      }
+    }
   };
 
   const logout = () => {
