@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 
 export default function SignupPage() {
-  const { register, login, user } = useContext(AuthContext);
+  const { register, user } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const [name, setName] = useState("");
@@ -12,7 +12,7 @@ export default function SignupPage() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    if (user) navigate("/");
+    if (user) navigate("/"); // Redirect to dashboard if already logged in
   }, [user]);
 
   const handleSignup = async (e: React.FormEvent) => {
@@ -25,11 +25,8 @@ export default function SignupPage() {
     }
 
     try {
-      // Register user
       await register(name, email, password);
-      // Auto-login after successful signup
-      await login(email, password);
-      navigate("/"); // dashboard
+      navigate("/"); // Dashboard after successful signup & auto-login
     } catch (err: any) {
       setError(err.message || "Signup failed");
     }

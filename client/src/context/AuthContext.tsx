@@ -43,6 +43,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         "https://edumaster-3sjq.onrender.com/api/auth/register",
         { name, email, password }
       );
+      // Auto-login after signup
+      await login(email, password);
     } catch (err: any) {
       if (err.response?.data?.message === "Email already exists") {
         throw new Error("This email is already registered. Try logging in.");

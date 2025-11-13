@@ -31,7 +31,7 @@ const queryClient = new QueryClient();
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user } = useContext(AuthContext);
-  if (!user) return <Navigate to="/signup" replace />;
+  if (!user) return <Navigate to="/signup" replace />; // redirect to signup if not logged in
   return <>{children}</>;
 }
 
@@ -42,14 +42,14 @@ export default function App() {
         <TooltipProvider>
           <BrowserRouter>
             <Routes>
-              {/* --- Default landing page redirects to signup --- */}
+              {/* Default landing page redirects to signup */}
               <Route path="/" element={<Navigate to="/signup" replace />} />
 
-              {/* --- Public routes --- */}
+              {/* Public routes */}
               <Route path="/signup" element={<SignupPage />} />
               <Route path="/login" element={<LoginPage />} />
 
-              {/* --- Protected routes --- */}
+              {/* Protected routes */}
               <Route
                 path="/*"
                 element={
@@ -61,6 +61,7 @@ export default function App() {
                           <Header />
                           <main className="flex-1">
                             <Routes>
+                              {/* Dashboard and subpages */}
                               <Route index element={<Dashboard />} />
                               <Route path="courses" element={<Courses />} />
                               <Route path="sessions" element={<Sessions />} />
@@ -86,6 +87,9 @@ export default function App() {
                   </ProtectedRoute>
                 }
               />
+
+              {/* Catch-all for unmatched paths */}
+              <Route path="*" element={<Navigate to="/404" replace />} />
             </Routes>
           </BrowserRouter>
         </TooltipProvider>
