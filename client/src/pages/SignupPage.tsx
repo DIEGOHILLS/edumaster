@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { AuthContext } from "../context/AuthContext";
 
 export default function SignupPage() {
+  const { register } = useContext(AuthContext);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -12,15 +13,11 @@ export default function SignupPage() {
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await axios.post("/api/auth/register", {
-        name,
-        email,
-        password,
-      });
-      alert(response.data.message);
+      await register(name, email, password);
+      alert("Signup successful!");
       navigate("/login");
     } catch (err: any) {
-      setError(err.response?.data?.message || "Signup failed. Try again.");
+      setError(err.response?.data?.message || "Signup failed");
     }
   };
 
@@ -31,9 +28,7 @@ export default function SignupPage() {
         className="bg-white shadow-md rounded-lg p-8 w-96"
       >
         <h2 className="text-2xl font-bold mb-6 text-center">Sign Up</h2>
-
         {error && <p className="text-red-500 mb-3">{error}</p>}
-
         <input
           type="text"
           placeholder="Name"

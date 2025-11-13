@@ -1,93 +1,40 @@
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { SidebarProvider } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/layout/AppSidebar";
-import { Header } from "@/components/layout/Header";
-import Dashboard from "./pages/Dashboard";
-import Courses from "./pages/Courses";
-import Sessions from "./pages/Sessions";
-import InstructorDashboard from "./pages/InstructorDashboard";
-import FeedbackDashboard from "./pages/FeedbackDashboard";
-import Leaderboard from "./pages/Leaderboard";
-import StudyGroups from "./pages/StudyGroups";
-import Forums from "./pages/Forums";
-import Achievements from "./pages/Achievements";
-import CalendarPage from "./pages/CalendarPage";
-import SettingsPage from "./pages/SettingsPage";
-import NotFound from "./pages/NotFound";
-import ABTesting from "./pages/ABTesting";
-import PeerReview from "./pages/PeerReview";
+import { AuthProvider, AuthContext } from "./context/AuthContext";
+import { useContext } from "react";
 import SignupPage from "./pages/SignupPage";
 import LoginPage from "./pages/LoginPage";
+import Dashboard from "./pages/Dashboard";
 
-// Auth
-import { AuthProvider, AuthContext } from "./context/AuthContext.tsx";
-import { useContext } from "react";
-
-const queryClient = new QueryClient();
-
-// 🔒 Wrapper for protected routes
+// Protected route wrapper
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user } = useContext(AuthContext);
   if (!user) return <Navigate to="/login" replace />;
   return <>{children}</>;
 }
 
-const App = () => (
-  <AuthProvider>
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <BrowserRouter>
-          <Routes>
-            {/* --- Public Routes --- */}
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/signup" element={<SignupPage />} />
+function AppRoutes() {
+  return (
+    <Routes>
+      <Route path="/signup" element={<SignupPage />} />
+      <Route path="/login" element={<LoginPage />} />
+      <Route
+        path="/*"
+        element={
+          <ProtectedRoute>
+            <Dashboard />
+          </ProtectedRoute>
+        }
+      />
+    </Routes>
+  );
+}
 
-            {/* --- Protected Routes --- */}
-            <Route
-              path="/*"
-              element={
-                <ProtectedRoute>
-                  <SidebarProvider>
-                    <div className="min-h-screen flex w-full bg-background">
-                      <AppSidebar />
-                      <div className="flex-1 flex flex-col">
-                        <Header />
-                        <main className="flex-1">
-                          <Routes>
-                            <Route path="/" element={<Dashboard />} />
-                            <Route path="/courses" element={<Courses />} />
-                            <Route path="/sessions" element={<Sessions />} />
-                            <Route path="/instructor" element={<InstructorDashboard />} />
-                            <Route path="/feedback" element={<FeedbackDashboard />} />
-                            <Route path="/leaderboard" element={<Leaderboard />} />
-                            <Route path="/study-groups" element={<StudyGroups />} />
-                            <Route path="/forums" element={<Forums />} />
-                            <Route path="/achievements" element={<Achievements />} />
-                            <Route path="/calendar" element={<CalendarPage />} />
-                            <Route path="/settings" element={<SettingsPage />} />
-                            <Route path="/ab-testing" element={<ABTesting />} />
-                            <Route path="/peer-review" element={<PeerReview />} />
-                            <Route path="/404" element={<NotFound />} />
-                            <Route path="*" element={<Navigate to="/404" replace />} />
-                          </Routes>
-                        </main>
-                      </div>
-                    </div>
-                    <Toaster />
-                    <Sonner />
-                  </SidebarProvider>
-                </ProtectedRoute>
-              }
-            />
-          </Routes>
-        </BrowserRouter>
-      </TooltipProvider>
-    </QueryClientProvider>
-  </AuthProvider>
-);
-
-export default App;
+export default function App() {
+  return (
+    <AuthProvider>
+      <BrowserRouter>
+        <AppRoutes />
+      </BrowserRouter>
+    </AuthProvider>
+  );
+}

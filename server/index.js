@@ -11,11 +11,10 @@ const app = express();
 // Middleware
 app.use(express.json());
 
-// CORS - allow frontend running locally
+// CORS
 const allowedOrigins = [
-  "http://localhost:3000", // React dev server
-  "http://localhost:5173", // Vite dev server
-  "https://edumaster.vercel.app", // deployed frontend
+  "http://localhost:5173", // local dev
+  "https://edumaster-sable.vercel.app", // deployed frontend
 ];
 
 app.use(
@@ -24,7 +23,7 @@ app.use(
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
-        console.log("❌ Blocked by CORS:", origin);
+        console.log("Blocked by CORS:", origin);
         callback(new Error("Not allowed by CORS"));
       }
     },
@@ -35,7 +34,7 @@ app.use(
 // Routes
 app.use("/api/auth", authRoutes);
 
-// Test route to check server
+// Test route
 app.get("/api/test", (req, res) => res.send("Backend is running"));
 
 // MongoDB connection
