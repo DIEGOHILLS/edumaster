@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { useContext } from "react";
 import { AuthProvider, AuthContext } from "./context/AuthContext";
+import { useContext } from "react";
 
 import SignupPage from "./pages/SignupPage";
 import LoginPage from "./pages/LoginPage";
@@ -35,68 +35,74 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
 
-export default function App() {
+function AppRoutes() {
   const { user } = useContext(AuthContext);
 
+  return (
+    <Routes>
+      {/* Default landing page */}
+      <Route
+        path="/"
+        element={
+          user ? <Navigate to="/dashboard" replace /> : <Navigate to="/signup" replace />
+        }
+      />
+
+      {/* Public routes */}
+      <Route path="/signup" element={<SignupPage />} />
+      <Route path="/login" element={<LoginPage />} />
+
+      {/* Protected routes */}
+      <Route
+        path="/*"
+        element={
+          <ProtectedRoute>
+            <SidebarProvider>
+              <div className="min-h-screen flex w-full bg-background">
+                <AppSidebar />
+                <div className="flex-1 flex flex-col">
+                  <Header />
+                  <main className="flex-1">
+                    <Routes>
+                      <Route path="dashboard" element={<Dashboard />} />
+                      <Route path="courses" element={<Courses />} />
+                      <Route path="sessions" element={<Sessions />} />
+                      <Route path="instructor" element={<InstructorDashboard />} />
+                      <Route path="feedback" element={<FeedbackDashboard />} />
+                      <Route path="leaderboard" element={<Leaderboard />} />
+                      <Route path="study-groups" element={<StudyGroups />} />
+                      <Route path="forums" element={<Forums />} />
+                      <Route path="achievements" element={<Achievements />} />
+                      <Route path="calendar" element={<CalendarPage />} />
+                      <Route path="settings" element={<SettingsPage />} />
+                      <Route path="ab-testing" element={<ABTesting />} />
+                      <Route path="peer-review" element={<PeerReview />} />
+                      <Route path="404" element={<NotFound />} />
+                      <Route path="*" element={<Navigate to="/404" replace />} />
+                    </Routes>
+                  </main>
+                </div>
+              </div>
+              <Toaster />
+              <Sonner />
+            </SidebarProvider>
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Catch-all */}
+      <Route path="*" element={<Navigate to="/404" replace />} />
+    </Routes>
+  );
+}
+
+export default function App() {
   return (
     <AuthProvider>
       <QueryClientProvider client={queryClient}>
         <TooltipProvider>
           <BrowserRouter>
-            <Routes>
-              {/* Default landing page */}
-              <Route
-                path="/"
-                element={
-                  user ? <Navigate to="/dashboard" replace /> : <Navigate to="/signup" replace />
-                }
-              />
-
-              {/* Public routes */}
-              <Route path="/signup" element={<SignupPage />} />
-              <Route path="/login" element={<LoginPage />} />
-
-              {/* Protected routes */}
-              <Route
-                path="/*"
-                element={
-                  <ProtectedRoute>
-                    <SidebarProvider>
-                      <div className="min-h-screen flex w-full bg-background">
-                        <AppSidebar />
-                        <div className="flex-1 flex flex-col">
-                          <Header />
-                          <main className="flex-1">
-                            <Routes>
-                              <Route path="dashboard" element={<Dashboard />} />
-                              <Route path="courses" element={<Courses />} />
-                              <Route path="sessions" element={<Sessions />} />
-                              <Route path="instructor" element={<InstructorDashboard />} />
-                              <Route path="feedback" element={<FeedbackDashboard />} />
-                              <Route path="leaderboard" element={<Leaderboard />} />
-                              <Route path="study-groups" element={<StudyGroups />} />
-                              <Route path="forums" element={<Forums />} />
-                              <Route path="achievements" element={<Achievements />} />
-                              <Route path="calendar" element={<CalendarPage />} />
-                              <Route path="settings" element={<SettingsPage />} />
-                              <Route path="ab-testing" element={<ABTesting />} />
-                              <Route path="peer-review" element={<PeerReview />} />
-                              <Route path="404" element={<NotFound />} />
-                              <Route path="*" element={<Navigate to="/404" replace />} />
-                            </Routes>
-                          </main>
-                        </div>
-                      </div>
-                      <Toaster />
-                      <Sonner />
-                    </SidebarProvider>
-                  </ProtectedRoute>
-                }
-              />
-
-              {/* Catch-all */}
-              <Route path="*" element={<Navigate to="/404" replace />} />
-            </Routes>
+            <AppRoutes />
           </BrowserRouter>
         </TooltipProvider>
       </QueryClientProvider>
