@@ -8,14 +8,14 @@ dotenv.config();
 
 const app = express();
 
-// --- Middleware ---
+// Middleware
 app.use(express.json());
 
-// ✅ Update CORS for both local + deployed frontend
+// CORS - allow frontend running locally
 const allowedOrigins = [
-  "http://localhost:5173", // local dev
-  "http://localhost:8080", // alternate local dev
-  "https://edumaster.vercel.app", // your Vercel deployed frontend
+  "http://localhost:3000", // React dev server
+  "http://localhost:5173", // Vite dev server
+  "https://edumaster.vercel.app", // deployed frontend
 ];
 
 app.use(
@@ -32,10 +32,13 @@ app.use(
   })
 );
 
-// --- Routes ---
+// Routes
 app.use("/api/auth", authRoutes);
 
-// --- MongoDB Connection ---
+// Test route to check server
+app.get("/api/test", (req, res) => res.send("Backend is running"));
+
+// MongoDB connection
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => {

@@ -12,12 +12,12 @@ export default function SignupPage() {
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:5000/api/auth/register", {
+      const response = await axios.post("/api/auth/register", {
         name,
         email,
         password,
       });
-      alert("Signup successful! You can now log in.");
+      alert(response.data.message);
       navigate("/login");
     } catch (err: any) {
       setError(err.response?.data?.message || "Signup failed. Try again.");
@@ -61,16 +61,6 @@ export default function SignupPage() {
         >
           Sign Up
         </button>
-
-        <p className="mt-3 text-sm text-center">
-          Already have an account?{" "}
-          <span
-            onClick={() => navigate("/login")}
-            className="text-blue-500 cursor-pointer"
-          >
-            Login
-          </span>
-        </p>
       </form>
     </div>
   );
