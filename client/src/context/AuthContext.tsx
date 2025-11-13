@@ -34,18 +34,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const register = async (name: string, email: string, password: string) => {
-    if (!name || !email || !password) {
-      throw new Error("All fields are required");
-    }
+    if (!name || !email || !password) throw new Error("All fields are required");
 
     try {
-      // Register the user
       await axios.post(
         "https://edumaster-3sjq.onrender.com/api/auth/register",
         { name, email, password }
       );
 
-      // Auto-login after successful registration
+      // Auto-login after successful signup
       await login(email, password);
     } catch (err: any) {
       if (err.response?.data?.message === "Email already exists") {

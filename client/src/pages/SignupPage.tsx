@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 
@@ -11,10 +11,6 @@ export default function SignupPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    if (user) navigate("/"); // redirect to dashboard if already logged in
-  }, [user]);
-
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
@@ -26,11 +22,17 @@ export default function SignupPage() {
 
     try {
       await register(name, email, password);
-      navigate("/"); // redirect to dashboard after signup
+      navigate("/"); // redirect to dashboard
     } catch (err: any) {
       setError(err.message || "Signup failed");
     }
   };
+
+  // Redirect already logged-in users
+  if (user) {
+    navigate("/"); 
+    return null; 
+  }
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
