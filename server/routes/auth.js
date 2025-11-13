@@ -6,7 +6,7 @@ import { authMiddleware } from "../middleware/auth.js";
 
 const router = express.Router();
 
-// Register
+// REGISTER
 router.post("/register", async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -25,7 +25,7 @@ router.post("/register", async (req, res) => {
   }
 });
 
-// Login
+// LOGIN
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -40,14 +40,14 @@ router.post("/login", async (req, res) => {
 
     res.json({
       user: { id: user._id, name: user.name, email: user.email },
-      token,
+      token
     });
   } catch (err) {
     res.status(500).json({ message: "Server error" });
   }
 });
 
-// Get current user
+// GET CURRENT USER
 router.get("/me", authMiddleware, async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select("-password");

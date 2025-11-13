@@ -11,23 +11,19 @@ const app = express();
 // Middleware
 app.use(express.json());
 
-// CORS
+// CORS: allow local dev + deployed frontend
 const allowedOrigins = [
-  "http://localhost:5173", // local dev
-  "https://edumaster-sable.vercel.app", // deployed frontend
+  "http://localhost:5173",             // local frontend
+  "https://edumaster-sable.vercel.app" // deployed frontend
 ];
 
 app.use(
   cors({
-    origin: function (origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        console.log("Blocked by CORS:", origin);
-        callback(new Error("Not allowed by CORS"));
-      }
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) callback(null, true);
+      else callback(new Error("Not allowed by CORS"));
     },
-    credentials: true,
+    credentials: true
   })
 );
 

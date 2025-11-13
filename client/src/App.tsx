@@ -5,7 +5,7 @@ import SignupPage from "./pages/SignupPage";
 import LoginPage from "./pages/LoginPage";
 import Dashboard from "./pages/Dashboard";
 
-// Protected route wrapper
+// Protected route
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user } = useContext(AuthContext);
   if (!user) return <Navigate to="/login" replace />;
