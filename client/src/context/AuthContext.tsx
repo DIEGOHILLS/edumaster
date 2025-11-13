@@ -12,7 +12,7 @@ export const AuthContext = createContext<AuthContextType>({
   user: null,
   login: async () => {},
   register: async () => {},
-  logout: () => {}
+  logout: () => {},
 });
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {

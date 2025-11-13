@@ -1,26 +1,27 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 
 export default function SignupPage() {
-  const { register, login } = useContext(AuthContext);
+  const { register, login, user } = useContext(AuthContext);
+  const navigate = useNavigate();
+
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const navigate = useNavigate();
+
+  // Redirect if already logged in
+  useEffect(() => {
+    if (user) navigate("/");
+  }, [user]);
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      // Register user
-      await register(name, email, password);
-
-      // Auto-login after signup
-      await login(email, password);
-
-      // Redirect to dashboard
-      navigate("/");
+      await register(name, email, password); // register backend
+      await login(email, password); // auto login
+      navigate("/"); // redirect to dashboard
     } catch (err: any) {
       setError(err.response?.data?.message || "Signup failed");
     }
@@ -39,6 +40,7 @@ export default function SignupPage() {
           value={name}
           onChange={(e) => setName(e.target.value)}
           className="border p-2 w-full mb-3 rounded"
+          required
         />
         <input
           type="email"
@@ -46,6 +48,7 @@ export default function SignupPage() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           className="border p-2 w-full mb-3 rounded"
+          required
         />
         <input
           type="password"
@@ -53,6 +56,7 @@ export default function SignupPage() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           className="border p-2 w-full mb-4 rounded"
+          required
         />
         <button
           type="submit"
@@ -60,6 +64,16 @@ export default function SignupPage() {
         >
           Sign Up
         </button>
+
+        <p className="mt-3 text-sm text-center">
+          Already have an account?{" "}
+          <span
+            onClick={() => navigate("/login")}
+            className="text-blue-500 cursor-pointer"
+          >
+            Login
+          </span>
+        </p>
       </form>
     </div>
   );

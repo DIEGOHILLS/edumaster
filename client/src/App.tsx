@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useContext } from "react";
 import { AuthProvider, AuthContext } from "./context/AuthContext";
+
 import SignupPage from "./pages/SignupPage";
 import LoginPage from "./pages/LoginPage";
 import Dashboard from "./pages/Dashboard";
@@ -17,6 +18,7 @@ import SettingsPage from "./pages/SettingsPage";
 import ABTesting from "./pages/ABTesting";
 import PeerReview from "./pages/PeerReview";
 import NotFound from "./pages/NotFound";
+
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/layout/AppSidebar";
 import { Header } from "@/components/layout/Header";
@@ -54,20 +56,20 @@ const AppRoutes = () => (
                 <Header />
                 <main className="flex-1">
                   <Routes>
-                    <Route path="/" element={<Dashboard />} />
-                    <Route path="/courses" element={<Courses />} />
-                    <Route path="/sessions" element={<Sessions />} />
-                    <Route path="/instructor" element={<InstructorDashboard />} />
-                    <Route path="/feedback" element={<FeedbackDashboard />} />
-                    <Route path="/leaderboard" element={<Leaderboard />} />
-                    <Route path="/study-groups" element={<StudyGroups />} />
-                    <Route path="/forums" element={<Forums />} />
-                    <Route path="/achievements" element={<Achievements />} />
-                    <Route path="/calendar" element={<CalendarPage />} />
-                    <Route path="/settings" element={<SettingsPage />} />
-                    <Route path="/ab-testing" element={<ABTesting />} />
-                    <Route path="/peer-review" element={<PeerReview />} />
-                    <Route path="/404" element={<NotFound />} />
+                    <Route index element={<Dashboard />} />
+                    <Route path="courses" element={<Courses />} />
+                    <Route path="sessions" element={<Sessions />} />
+                    <Route path="instructor" element={<InstructorDashboard />} />
+                    <Route path="feedback" element={<FeedbackDashboard />} />
+                    <Route path="leaderboard" element={<Leaderboard />} />
+                    <Route path="study-groups" element={<StudyGroups />} />
+                    <Route path="forums" element={<Forums />} />
+                    <Route path="achievements" element={<Achievements />} />
+                    <Route path="calendar" element={<CalendarPage />} />
+                    <Route path="settings" element={<SettingsPage />} />
+                    <Route path="ab-testing" element={<ABTesting />} />
+                    <Route path="peer-review" element={<PeerReview />} />
+                    <Route path="404" element={<NotFound />} />
                     <Route path="*" element={<Navigate to="/404" replace />} />
                   </Routes>
                 </main>
@@ -82,16 +84,16 @@ const AppRoutes = () => (
   </Routes>
 );
 
-const App = () => (
-  <AuthProvider>
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <BrowserRouter>
-          <AppRoutes />
-        </BrowserRouter>
-      </TooltipProvider>
-    </QueryClientProvider>
-  </AuthProvider>
-);
-
-export default App;
+export default function App() {
+  return (
+    <AuthProvider>
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <BrowserRouter>
+            <AppRoutes />
+          </BrowserRouter>
+        </TooltipProvider>
+      </QueryClientProvider>
+    </AuthProvider>
+  );
+}
