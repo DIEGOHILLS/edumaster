@@ -39,11 +39,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
 
     try {
+      // Register the user
       await axios.post(
         "https://edumaster-3sjq.onrender.com/api/auth/register",
         { name, email, password }
       );
-      // Auto-login after signup
+
+      // Auto-login after successful registration
       await login(email, password);
     } catch (err: any) {
       if (err.response?.data?.message === "Email already exists") {

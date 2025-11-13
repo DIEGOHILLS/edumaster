@@ -11,16 +11,23 @@ export default function LoginPage() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    if (user) navigate("/");
+    if (user) navigate("/"); // redirect if already logged in
   }, [user]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
+
+    if (!email || !password) {
+      setError("All fields are required");
+      return;
+    }
+
     try {
       await login(email, password);
-      navigate("/"); // dashboard
+      navigate("/"); // go to dashboard after login
     } catch (err: any) {
-      setError(err.response?.data?.message || "Login failed");
+      setError(err.message || "Login failed");
     }
   };
 
@@ -37,7 +44,6 @@ export default function LoginPage() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           className="border p-2 w-full mb-3 rounded"
-          required
         />
         <input
           type="password"
@@ -45,17 +51,16 @@ export default function LoginPage() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           className="border p-2 w-full mb-4 rounded"
-          required
         />
         <button
           type="submit"
-          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
+          className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700"
         >
           Login
         </button>
 
         <p className="mt-3 text-sm text-center">
-          Don’t have an account?{" "}
+          Don't have an account?{" "}
           <span
             onClick={() => navigate("/signup")}
             className="text-blue-500 cursor-pointer"

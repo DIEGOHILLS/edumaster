@@ -12,7 +12,7 @@ export default function SignupPage() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    if (user) navigate("/"); // Redirect to dashboard if already logged in
+    if (user) navigate("/"); // redirect to dashboard if already logged in
   }, [user]);
 
   const handleSignup = async (e: React.FormEvent) => {
@@ -26,7 +26,7 @@ export default function SignupPage() {
 
     try {
       await register(name, email, password);
-      navigate("/"); // Dashboard after successful signup & auto-login
+      navigate("/"); // redirect to dashboard after signup
     } catch (err: any) {
       setError(err.message || "Signup failed");
     }
